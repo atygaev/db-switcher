@@ -12,7 +12,7 @@ repositories {
     mavenCentral()
 }
 
-def envId = project.findProperty('envId') ?: 'dev'
+def envId = project.findProperty('envId') ?: 'local'
 
 def envDbDriver = [
         'local': 'com.h2database:h2',
