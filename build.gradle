@@ -12,8 +12,20 @@ repositories {
     mavenCentral()
 }
 
+def envId = project.findProperty('envId') ?: 'dev'
+
+def envDbDriver = [
+        'local': 'com.h2database:h2',
+        'dev': 'org.postgresql:postgresql'
+]
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly envDbDriver[envId] ?: envDbDriver['local']
+}
+
+bootRun {
+    def activeProfile = envDbDriver.containsKey(envId) ? envId : 'local'
+
+    systemProperty 'spring.profiles.active', activeProfile
 }
