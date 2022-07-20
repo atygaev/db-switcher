@@ -16,7 +16,7 @@ def envId = project.findProperty('envId') ?: 'local'
 
 def envDbDriver = [
         'local': 'com.h2database:h2',
-        'dev': 'org.postgresql:postgresql'
+        'dev'  : 'org.postgresql:postgresql'
 ]
 
 dependencies {
