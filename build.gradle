@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'io.freefair.lombok' version '6.5.0.3'
     id 'java'
 }
 
@@ -12,7 +13,20 @@ repositories {
     mavenCentral()
 }
 
+def envId = project.findProperty('envId') ?: 'local'
+
+def envDbDriver = [
+        'local': 'com.h2database:h2',
+        'dev'  : 'org.postgresql:postgresql'
+]
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly envDbDriver[envId] ?: envDbDriver['local']
+}
+
+bootRun {
+    def activeProfile = envDbDriver.containsKey(envId) ? envId : 'local'
+
+    systemProperty 'spring.profiles.active', activeProfile
 }
