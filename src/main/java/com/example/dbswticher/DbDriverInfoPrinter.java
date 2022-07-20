@@ -1,6 +1,7 @@
 package com.example.dbswticher;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class DbDriverInfoPrinter {
@@ -16,7 +18,7 @@ public class DbDriverInfoPrinter {
 
     @EventListener
     public void handle(ApplicationStartedEvent event) {
-        System.out.printf("Active profile: %s%n", Arrays.toString(environment.getActiveProfiles()));
+        log.info("Active profile: {}", Arrays.toString(environment.getActiveProfiles()));
 
         String[] driverClassNames = {
                 "org.h2.Driver",
@@ -26,9 +28,9 @@ public class DbDriverInfoPrinter {
         for (String driverClassName : driverClassNames) {
             try {
                 Class.forName(driverClassName);
-                System.out.printf("Driver [%s] is loaded%n", driverClassName);
+                log.info("Driver [{}] is loaded", driverClassName);
             } catch (ClassNotFoundException e) {
-                System.out.printf("Driver [%s] is missing%n", driverClassName);
+                log.warn("Driver [{}] is missing", driverClassName);
             }
         }
     }
